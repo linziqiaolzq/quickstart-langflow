@@ -1,5 +1,5 @@
 Service:
-  RegionId: ap-southeast-1
+  RegionId: cn-hangzhou
   DeployType: ros
   OperationMetadata:
     StatusOperationConfigs:
@@ -24,10 +24,8 @@ Service:
           - cn-zhangjiakou
           - cn-huhehaote
           - cn-wulanchabu
-          - cn-wulanchabu-acdr-1
           - cn-hangzhou
           - cn-shanghai
-          - cn-shanghai-cloudspe
           - cn-nanjing
           - cn-shenzhen
           - cn-heyuan
@@ -48,7 +46,6 @@ Service:
           - eu-west-1
           - eu-central-1
           - me-east-1
-          - me-central-1
   ServiceType: private
   ServiceInfo:
     Locale: zh-CN
@@ -59,7 +56,7 @@ Artifact:
     ArtifactType: File
     ArtifactName: linziqiaolzq_quickstart-langflow-docker-compose
     ArtifactProperty:
-      RegionId: ap-southeast-1
+      RegionId: cn-hangzhou
       Url: 'resources/artifact_resources/docker_compose.tar'
   Artifact_2:
     ArtifactType: AcrImage

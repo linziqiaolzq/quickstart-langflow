@@ -151,11 +151,6 @@ Parameters:
       en: Zone ID
       zh-cn: 可用区ID
     AssociationProperty: ALIYUN::ECS::Instance::ZoneId
-    AssociationPropertyMetadata:
-      DefaultValueStrategy: random
-      InstanceChargeType: ${PayType}
-      SystemDiskCategory: cloud_essd
-      InstanceType: ${EcsInstanceType}
   VpcId:
     Type: String
     Label:
@@ -168,7 +163,6 @@ Parameters:
         - ${VpcOption}
     Default: ''
     AssociationPropertyMetadata:
-      AutoSelectFirst: true
       Visible:
         Condition:
           Fn::Equals:
@@ -186,9 +180,8 @@ Parameters:
         - ExistingVPC
         - ${VpcOption}
     AssociationPropertyMetadata:
-      AutoSelectFirst: true
-      VpcId: ${VpcId}
-      ZoneId: ${ZoneId}
+      VpcId: VpcId
+      ZoneId: ZoneId
       Visible:
         Condition:
           Fn::Equals:
@@ -228,12 +221,12 @@ Resources:
           - Ref: EcsVpc
           - Ref: VpcId
       SecurityGroupIngress:
-        - PortRange: 5432/5432
+        - PortRange: 7860/7860
           Priority: 1
           SourceCidrIp: 0.0.0.0/0
           IpProtocol: tcp
           NicType: internet
-        - PortRange: 7860/7860
+        - PortRange: 5432/5432
           Priority: 1
           SourceCidrIp: 0.0.0.0/0
           IpProtocol: tcp

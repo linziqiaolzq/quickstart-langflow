@@ -1,5 +1,5 @@
 Service:
-  RegionId: cn-hangzhou
+  RegionId: ap-southeast-1
   DeployType: ros
   OperationMetadata:
     StatusOperationConfigs:
@@ -24,8 +24,10 @@ Service:
           - cn-zhangjiakou
           - cn-huhehaote
           - cn-wulanchabu
+          - cn-wulanchabu-acdr-1
           - cn-hangzhou
           - cn-shanghai
+          - cn-shanghai-cloudspe
           - cn-nanjing
           - cn-shenzhen
           - cn-heyuan
@@ -46,6 +48,7 @@ Service:
           - eu-west-1
           - eu-central-1
           - me-east-1
+          - me-central-1
   ServiceType: private
   ServiceInfo:
     Locale: zh-CN
@@ -56,5 +59,30 @@ Artifact:
     ArtifactType: File
     ArtifactName: linziqiaolzq_quickstart-langflow-docker-compose
     ArtifactProperty:
-      RegionId: cn-hangzhou
+      RegionId: ap-southeast-1
       Url: 'resources/artifact_resources/docker_compose.tar'
+  Artifact_2:
+    ArtifactType: AcrImage
+    ArtifactName: AcrImage-langflowai-langflow
+    ArtifactProperty:
+      RepoName: ${AcrImageBuilder.AcrImage_1.RepoName}
+      Tag: ${AcrImageBuilder.AcrImage_1.Tag}
+      RepoType: Public
+  Artifact_3:
+    ArtifactType: AcrImage
+    ArtifactName: AcrImage-postgres
+    ArtifactProperty:
+      RepoName: ${AcrImageBuilder.AcrImage_2.RepoName}
+      Tag: ${AcrImageBuilder.AcrImage_2.Tag}
+      RepoType: Public
+AcrImageBuilder:
+  AcrImage_1:
+    BuildType: DockerRepo
+    DockerRepoUrl: langflowai/langflow:latest
+    RepoName: langflowai/langflow
+    Tag: latest
+  AcrImage_2:
+    BuildType: DockerRepo
+    DockerRepoUrl: postgres:16
+    RepoName: postgres
+    Tag: 16

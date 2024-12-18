@@ -1,16 +1,16 @@
 Service:
-  RegionId: cn-hangzhou
+  RegionId: ap-southeast-1
   DeployType: ros
   OperationMetadata:
     StatusOperationConfigs:
-      - TemplateName: '单机版'
+      - TemplateName: 'ECS单机版'
         SupportOperations:
           - Start
           - Stop
           - Restart
     SupportBackup: true
     ModifyParametersConfig:
-      - TemplateName: 单机版
+      - TemplateName: ECS单机版
         Operation:
           - Name: 变更ECS实例规格
             Description: 变更ECS实例规格
@@ -24,76 +24,42 @@ Service:
               - InstancePassword
   DeployMetadata:
     SupplierDeployMetadata:
-      FileArtifactRelation:
-        '{{ computenest::file::linziqiaolzq_quickstart-langflow-docker-compose }}':
-          ArtifactId: ${Artifact.Artifact_1.ArtifactId}
-          ArtifactVersion: ${Artifact.Artifact_1.ArtifactVersion}
+      ArtifactRelation:
+        ecs_image_quickstart-langflow:
+          ArtifactId: ${Artifact.EcsImage.ArtifactId}
+          ArtifactVersion: draft
     TemplateConfigs:
-      - Name: 单机版
+      - Name: ECS单机版
         Url: 'ros_templates/template.yaml'
         AllowedRegions:
-          - cn-qingdao
-          - cn-beijing
-          - cn-zhangjiakou
-          - cn-huhehaote
-          - cn-wulanchabu
-          - cn-hangzhou
-          - cn-shanghai
-          - cn-shanghai-cloudspe
-          - cn-nanjing
-          - cn-shenzhen
-          - cn-heyuan
-          - cn-guangzhou
-          - cn-fuzhou
-          - cn-wuhan-lr
-          - cn-chengdu
-          - cn-hongkong
-          - ap-northeast-1
-          - ap-northeast-2
           - ap-southeast-1
-          - ap-southeast-3
-          - ap-southeast-6
-          - ap-southeast-5
-          - ap-southeast-7
-          - us-east-1
-          - us-west-1
-          - eu-west-1
-          - eu-central-1
-          - me-east-1
   ServiceType: private
   ServiceInfo:
     Locale: zh-CN
-    ShortDescription: docker compose deploy
+    ShortDescription: demo
     Image: 'resources/icons/service_logo.png'
 Artifact:
-  Artifact_1:
-    ArtifactType: File
-    ArtifactName: linziqiaolzq_quickstart-langflow-docker-compose
-    ArtifactProperty:
-      RegionId: cn-hangzhou
-      Url: 'resources/artifact_resources/docker_compose.tar'
-  Artifact_2:
-    ArtifactType: AcrImage
-    ArtifactName: AcrImage-langflowai-langflow
-    ArtifactProperty:
-      RepoName: ${AcrImageBuilder.AcrImage_1.RepoName}
-      Tag: ${AcrImageBuilder.AcrImage_1.Tag}
-      RepoType: Public
-  Artifact_3:
-    ArtifactType: AcrImage
-    ArtifactName: AcrImage-postgres
-    ArtifactProperty:
-      RepoName: ${AcrImageBuilder.AcrImage_2.RepoName}
-      Tag: ${AcrImageBuilder.AcrImage_2.Tag}
-      RepoType: Public
-AcrImageBuilder:
-  AcrImage_1:
-    BuildType: DockerRepo
-    DockerRepoUrl: langflowai/langflow:latest
-    RepoName: langflowai/langflow
-    Tag: latest
-  AcrImage_2:
-    BuildType: DockerRepo
-    DockerRepoUrl: postgres:16
-    RepoName: postgres
-    Tag: 16
+  EcsImage:
+    ArtifactType: EcsImage
+    ArtifactName: ecs_image_quickstart-langflow
+    Description: quickstart-langflow EcsImage
+    SupportRegionIds:
+        - ap-southeast-1
+    ArtifactBuildProperty:
+      CodeRepo:
+        Platform: github
+        Owner: linziqiaolzq
+        RepoName: linziqiaolzq/quickstart-langflow
+        Branch: main
+      RegionId: ap-southeast-1
+      CommandType: RunShellScript
+      CommandContent: |-
+        mkdir -p /root/application
+        if [ -e "/root/code/langflow-data" ]; then cp -r "/root/code/langflow-data" "/root/application/"; fi
+        if [ -e "/root/code/.env" ]; then cp -r "/root/code/.env" "/root/application/"; fi
+        if [ -e "/root/code/docker-compose.yml" ]; then cp -r "/root/code/docker-compose.yml" "/root/application/"; fi
+        if [ -e "/root/code/langflow-postgres" ]; then cp -r "/root/code/langflow-postgres" "/root/application/"; fi
+        cd /root/application
+        sed -i 's/pull_policy: always/pull_policy: if_not_present/g' docker-compose.yml
+        docker compose -f docker-compose.yml build
+        docker compose -f docker-compose.yml pull || true;

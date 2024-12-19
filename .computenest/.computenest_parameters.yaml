@@ -3,7 +3,7 @@ ArtifactSourceType: DockerCompose
 ServiceBuildRegion: ap-southeast-1
 RepoName: linziqiaolzq/quickstart-langflow
 DockerComposeEnvPath: .env
-RegionId: ap-southeast-1
+RegionId: cn-hangzhou
 CustomParameters: ''
 DockerComposeYamlPath: docker-compose.yml
 Owner: linziqiaolzq
